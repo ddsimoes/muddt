@@ -44,9 +44,9 @@ class RawDump(val options: RawDumpOptions) : Runnable {
 
         if (errorTables.isNotEmpty()) {
             val errorFile = options.dir / "error-${System.currentTimeMillis()}.txt"
-            errorFile.printWriter().use {
-                errorTables.forEach {
-                    println(it)
+            errorFile.printWriter().use { writer ->
+                errorTables.forEach { table ->
+                    writer.println(table)
                 }
             }
         }
