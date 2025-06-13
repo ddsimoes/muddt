@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
-import org.testcontainers.containers.OracleContainer
+import org.testcontainers.oracle.OracleContainer
 import java.nio.file.Files
 import java.sql.DriverManager
 
@@ -13,7 +13,7 @@ import java.sql.DriverManager
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class RawDumpLoaderTest {
     @Container
-    private val oracle = OracleContainer("gvenzl/oracle-free:23-slim")
+    private val oracle = OracleContainer("gvenzl/oracle-free:23.4-slim-faststart")
 
     private val props: Map<String, String> by lazy {
         mapOf(
@@ -25,6 +25,7 @@ class RawDumpLoaderTest {
     @BeforeEach
     fun setUp() {
         val conn = DriverManager.getConnection(oracle.jdbcUrl, oracle.username, oracle.password)
+        conn.autoCommit = false
         conn.createStatement().use { stmt ->
             try {
                 stmt.executeUpdate("DROP TABLE test_table")
@@ -56,7 +57,7 @@ class RawDumpLoaderTest {
 
         DriverManager.getConnection(oracle.jdbcUrl, oracle.username, oracle.password).use { conn ->
             conn.createStatement().executeUpdate("TRUNCATE TABLE test_table")
-            conn.commit()
+            //conn.commit()
         }
 
         val loadOptions = RawDumpLoader.Options(

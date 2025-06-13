@@ -24,7 +24,7 @@ dependencies {
     testImplementation(kotlin("test-junit5"))
     testImplementation("org.testcontainers:junit-jupiter:1.19.7")
     testImplementation("org.testcontainers:testcontainers:1.19.7")
-    testImplementation("org.testcontainers:oracle-xe:1.19.7")
+    testImplementation("org.testcontainers:oracle-free:1.20.0")
 }
 
 tasks.test {
