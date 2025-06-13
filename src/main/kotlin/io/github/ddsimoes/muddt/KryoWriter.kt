@@ -17,7 +17,18 @@ private const val RECORD: Byte = (0xFF).toByte()
 private const val EOF: Byte = 3
 
 
-class KryoWriter(outputStream: OutputStream, private val rs: ResultSet, private val limit: Int, private val printCount: Int): Closeable {
+class KryoWriter(
+    outputStream: OutputStream,
+    private val tableName: String,
+    columns: List<String>,
+    private val rs: ResultSet,
+    private val limit: Int,
+    private val printCount: Int
+): Closeable {
+
+    init {
+        check(tableName.isNotBlank()) { "table name can't be blank" }
+    }
 
     private val output = Output(outputStream)
 
@@ -62,7 +73,7 @@ class KryoWriter(outputStream: OutputStream, private val rs: ResultSet, private 
 
     private fun writeHeader() {
         output.writeByte(HEADER)
-        output.writeString(rs.metaData.getTableName(1))
+        output.writeString(tableName)
         output.writeVarInt(columns.size, true)
         columns.forEachIndexed { index, column ->
             print(index + 1)

@@ -75,10 +75,18 @@ class RawDump(val options: RawDumpOptions) : Runnable {
                 if (stmt is OracleStatement) {
                     stmt.lobPrefetchSize = 1024 * 1024
                 }
+
                 stmt.executeQuery(sql).use { rs ->
                     rs.fetchSize = fetchSize
 
-                    KryoWriter(File(options.dir, "$tableName.kryo").outputStream(), rs, limit = options.limit, printCount = printCount).use {
+                    KryoWriter(
+                        File(options.dir, "$tableName.kryo").outputStream(),
+                        tableName,
+                        columns,
+                        rs,
+                        limit = options.limit,
+                        printCount = printCount
+                    ).use {
                         it.run()
                     }
                 }
@@ -108,7 +116,9 @@ class RawDump(val options: RawDumpOptions) : Runnable {
             listOf(schema, tableName)
         }
 
-        return jdbcManager.metaData.getColumns(null, schema, tblName, null).toList {
+        checkNotNull(tblName)
+
+        return jdbcManager.metaData.getColumns(null, schema, tblName.uppercase(), null).toList {
             getString(4)
         }.takeIf { it.isNotEmpty() }
     }
@@ -262,6 +272,9 @@ private fun buildJdbcManager(url: String, properties: Map<String, String>): Conn
             dbProps[k.removePrefix("db.")] = v
         }
     }
+
+
+    dbProps["ResultSetMetaDataOptions"] = "1"
 
     return DriverManager.getConnection(url, dbProps).also {
         it.autoCommit = false
