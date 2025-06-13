@@ -17,7 +17,7 @@ solution for capturing table snapshots or migrating data between instances.
 
 ## Requirements
 
-- Java 8 or newer
+- Java 11 or newer
 - Access to the target Oracle database
 - [Gradle](https://gradle.org/) is included via the wrapper script
 
