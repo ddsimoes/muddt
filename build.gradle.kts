@@ -22,6 +22,9 @@ dependencies {
     implementation("com.oracle.ojdbc:ojdbc8:19.3.0.0")
     implementation("com.esotericsoftware:kryo:5.1.1")
     testImplementation(kotlin("test"))
+    testImplementation("org.testcontainers:junit-jupiter:1.19.7")
+    testImplementation("org.testcontainers:oracle-xe:1.19.7")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
 }
 
 tasks.test {
