@@ -21,7 +21,10 @@ dependencies {
     implementation("com.github.ajalt.clikt:clikt:4.2.0")
     implementation("com.oracle.ojdbc:ojdbc8:19.3.0.0")
     implementation("com.esotericsoftware:kryo:5.1.1")
-    testImplementation(kotlin("test"))
+    testImplementation(kotlin("test-junit5"))
+    testImplementation("org.testcontainers:junit-jupiter:1.19.7")
+    testImplementation("org.testcontainers:testcontainers:1.19.7")
+    testImplementation("org.testcontainers:oracle-xe:1.19.7")
 }
 
 tasks.test {
